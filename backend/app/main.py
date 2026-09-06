@@ -53,9 +53,13 @@ def health_check():
 # Static file serving (Single-service Render deployment support)
 # Check multiple possible frontend build locations
 frontend_dist_paths = [
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../frontend/dist")),
+    os.path.abspath("frontend/dist"),
+    os.path.abspath("static"),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../frontend/dist")),
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../../frontend/dist")),
-    os.path.abspath(os.path.join(os.path.dirname(__file__), "../static"))
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../static")),
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../../static")),
+    os.path.abspath("dist"),
 ]
 
 static_dir = None
