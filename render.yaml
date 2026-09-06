@@ -1,0 +1,43 @@
+services:
+  # 1. FastAPI Backend Web Service
+  - type: web
+    name: quantum-ai-colony-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_URL
+        fromDatabase:
+          name: quantum-colony-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
+
+  # 2. React Frontend Web Service
+  - type: web
+    name: quantum-ai-colony-frontend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s dist -l 3000
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: VITE_API_URL
+        value: https://quantum-ai-colony-backend.onrender.com
+
+databases:
+  - name: quantum-colony-db
+    region: oregon
+    plan: free
+    databaseName: quantum_colony
+    user: colony_admin
