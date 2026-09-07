@@ -85,7 +85,7 @@ export default function ColonyStation() {
 
     connectWebSocket();
 
-    // Fallback message load
+    // Fallback historical messages
     api.getColonyMessages().then((hist) => {
       if (hist && hist.length > 0) {
         setMessages(hist);
@@ -144,26 +144,26 @@ export default function ColonyStation() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 bg-white min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 min-h-screen">
       
       {/* Station Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-gray-100 border border-gray-300 text-gray-700 text-xs font-mono">
-            <span className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-emerald-600' : 'bg-gray-400'}`} />
-            <span>Colony Bus: {wsConnected ? 'ONLINE' : 'STANDBY'}</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 text-xs font-mono shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+            <span className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-emerald-400 animate-pulse' : 'bg-rose-400'}`} />
+            <span>Colony Bus: {wsConnected ? 'CONNECTED • 5 AGENTS ONLINE' : 'BUS RECONNECTING...'}</span>
           </div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-gray-900 mt-1">
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-white mt-1">
             Colony Station Command Deck
           </h1>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-slate-400">
             Real-time multi-agent quantum architecture deliberation, railway transit & state consensus
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1.5 bg-white rounded border border-gray-300 text-xs font-mono text-gray-700 flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-gray-800" />
+          <div className="px-3.5 py-2 bg-slate-900/80 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 flex items-center gap-2 shadow-md">
+            <Cpu className="w-4 h-4 text-cyan-400" />
             <span>5 Specialized Agents</span>
           </div>
         </div>
@@ -183,28 +183,28 @@ export default function ColonyStation() {
         <div className="space-y-6">
           
           {/* Mission Presets Card */}
-          <div className="p-5 rounded-xl bg-white border border-gray-200 space-y-4 shadow-xs">
+          <div className="p-5 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-4 shadow-xl backdrop-blur-xl">
             <div className="flex items-center justify-between">
-              <h3 className="text-xs font-bold font-mono uppercase text-gray-900 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-gray-800" />
+              <h3 className="text-xs font-bold font-mono uppercase text-slate-200 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-cyan-400" />
                 <span>Quick Mission Dispatch</span>
               </h3>
-              <span className="text-[10px] text-gray-500 font-mono">1-Click Dispatch</span>
+              <span className="text-[10px] text-slate-500 font-mono">1-Click Dispatch</span>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {PRESETS.map((p) => (
                 <button
                   key={p.id}
                   disabled={isSimulating}
                   onClick={() => handleLaunchMission(p.title, p.prompt)}
-                  className="w-full text-left p-3 rounded-lg bg-gray-50 hover:bg-white border border-gray-200 hover:border-gray-900 transition-colors disabled:opacity-50 group"
+                  className="w-full text-left p-3.5 rounded-xl bg-slate-950/80 hover:bg-slate-800/80 border border-slate-800 hover:border-purple-500/50 transition-all disabled:opacity-50 group"
                 >
-                  <div className="flex items-center justify-between text-xs font-bold text-gray-900 group-hover:underline">
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-200 group-hover:text-cyan-300">
                     <span>{p.title}</span>
-                    <Play className="w-3 h-3 fill-gray-900" />
+                    <Play className="w-3 h-3 fill-slate-500 group-hover:fill-cyan-400 text-transparent group-hover:translate-x-0.5 transition-transform" />
                   </div>
-                  <p className="text-[11px] text-gray-600 mt-1 line-clamp-2 leading-normal">
+                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 leading-normal">
                     {p.prompt}
                   </p>
                 </button>
@@ -212,23 +212,23 @@ export default function ColonyStation() {
             </div>
           </div>
 
-          {/* Consensus Result Card */}
+          {/* Consensus Result Card (appears when mission finishes) */}
           {consensusData && (
-            <div className="p-5 rounded-xl bg-white border border-gray-900 shadow-sm space-y-3">
-              <div className="flex items-center gap-2 text-emerald-800 text-xs font-bold font-mono">
-                <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-[#0c1a3a] to-slate-900/90 border border-cyan-500/50 shadow-[0_0_25px_rgba(56,189,248,0.2)] space-y-4 animate-in fade-in slide-in-from-bottom-2">
+              <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold font-mono">
+                <CheckCircle2 className="w-4 h-4" />
                 <span>MISSION CONSENSUS ACHIEVED</span>
               </div>
 
               <div>
-                <h4 className="text-sm font-bold text-gray-900">{consensusData.title}</h4>
-                <p className="text-xs text-gray-700 mt-1 leading-relaxed">{consensusData.summary}</p>
+                <h4 className="text-sm font-bold text-white">{consensusData.title}</h4>
+                <p className="text-xs text-slate-300 mt-1 leading-relaxed">{consensusData.summary}</p>
               </div>
 
               {consensusData.final_circuit && (
-                <div className="p-3 bg-gray-50 rounded border border-gray-200 text-xs font-mono space-y-1">
-                  <div className="text-gray-900 font-semibold">Synthesized Circuit:</div>
-                  <div className="text-gray-600 text-[11px]">
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-xs font-mono space-y-1">
+                  <div className="text-cyan-300 font-semibold">Synthesized Circuit:</div>
+                  <div className="text-slate-400 text-[11px]">
                     {consensusData.final_circuit.num_qubits} Qubits • {consensusData.final_circuit.gates?.length || 0} Gates (Optimized)
                   </div>
                 </div>
@@ -236,7 +236,7 @@ export default function ColonyStation() {
 
               <button
                 onClick={handleOpenInLab}
-                className="w-full py-2 px-3 bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs rounded border border-gray-900 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2.5 px-4 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-black font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 hover:scale-105"
               >
                 <Terminal className="w-4 h-4" />
                 <span>Open in Quantum Circuit Studio</span>
@@ -246,21 +246,21 @@ export default function ColonyStation() {
           )}
 
           {/* Agent Pipeline Overview */}
-          <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 text-xs font-mono space-y-2">
-            <span className="text-gray-500 uppercase text-[10px] tracking-wider">Bus Transit Pipeline:</span>
-            <div className="text-[11px] text-gray-700 space-y-1">
-              <div>1. <strong className="text-gray-900">Professor Vance:</strong> Theoretical derivation</div>
-              <div>2. <strong className="text-gray-900">Devin Matrix:</strong> Gate synthesis</div>
-              <div>3. <strong className="text-gray-900">Agent BugHunter:</strong> Error & coherence audit</div>
-              <div>4. <strong className="text-gray-900">OptiPrime:</strong> Depth optimization</div>
-              <div>5. <strong className="text-gray-900">Iris Quantum:</strong> 3D Hilbert state projection</div>
+          <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs font-mono space-y-2">
+            <span className="text-slate-400 uppercase text-[10px] tracking-wider">Bus Transit Pipeline:</span>
+            <div className="text-[11px] text-slate-300 space-y-1">
+              <div>1. <strong className="text-cyan-400">Professor Vance:</strong> Theoretical derivation</div>
+              <div>2. <strong className="text-emerald-400">Devin Matrix:</strong> Gate synthesis</div>
+              <div>3. <strong className="text-rose-400">Agent BugHunter:</strong> Error & coherence audit</div>
+              <div>4. <strong className="text-amber-400">OptiPrime:</strong> Depth optimization</div>
+              <div>5. <strong className="text-purple-400">Iris Quantum:</strong> 3D Hilbert state projection</div>
             </div>
           </div>
 
         </div>
 
         {/* Right 2 Columns: Live Agent Dialogue Feed */}
-        <div className="lg:col-span-2 h-[660px]">
+        <div className="lg:col-span-2 h-[680px]">
           <AgentChatModal
             messages={messages}
             onSendPrompt={(prompt) => handleLaunchMission("Custom User Directive", prompt)}

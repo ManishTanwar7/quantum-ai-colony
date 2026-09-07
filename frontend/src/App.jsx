@@ -9,8 +9,10 @@ import ChallengeCenter from './pages/ChallengeCenter';
 import InstructorDashboard from './pages/InstructorDashboard';
 import AuthPage from './pages/AuthPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import QuantumParticleField from './components/QuantumParticleField';
+import QuantumTransition from './components/QuantumTransition';
 import { AuthProvider } from './context/AuthContext';
-import { Atom } from 'lucide-react';
+import { Atom, Sparkles } from 'lucide-react';
 
 export default function App() {
   const [wsConnected, setWsConnected] = useState(true);
@@ -18,10 +20,19 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
+        <div className="min-h-screen flex flex-col bg-[#070b16] text-slate-100 font-sans relative selection:bg-purple-500/30 selection:text-white">
+          
+          {/* 1. Interactive Ambient Quantum Particle Field in Background */}
+          <QuantumParticleField />
+
+          {/* 2. Quantum Sphere Route Transition Overlay */}
+          <QuantumTransition />
+
+          {/* 3. Sleek Navigation Header */}
           <Navbar wsConnected={wsConnected} />
 
-          <main className="flex-1 bg-white">
+          {/* 4. Main Page Content */}
+          <main className="flex-1 relative z-10">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/colony" element={<ColonyStation />} />
@@ -40,24 +51,30 @@ export default function App() {
             </Routes>
           </main>
 
-          {/* Clean Office Footer */}
-          <footer className="border-t border-gray-200 bg-gray-100 py-6 px-4 lg:px-8 mt-12 text-xs text-gray-600 font-mono">
+          {/* 5. Modern Futuristic Footer */}
+          <footer className="border-t border-slate-800/80 bg-[#070b16]/90 backdrop-blur-md py-8 px-4 lg:px-8 mt-16 text-xs text-slate-400 font-mono relative z-10">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-gray-700">
-                <Atom className="w-4 h-4 text-gray-900" />
-                <span className="font-bold text-gray-900 tracking-wide">QUANTUM AI COLONY</span>
-                <span>• Professional Edition</span>
+              <div className="flex items-center gap-2.5 text-slate-300">
+                <div className="w-6 h-6 rounded-lg bg-purple-950 border border-purple-500/40 flex items-center justify-center text-purple-400 shadow-[0_0_10px_rgba(168,85,247,0.3)]">
+                  <Atom className="w-4 h-4 animate-spin-slow" />
+                </div>
+                <span className="font-bold tracking-wider text-white">QUANTUM AI COLONY</span>
+                <span className="text-slate-500">• Production Edition</span>
               </div>
 
-              <div className="flex items-center gap-4 text-[11px] text-gray-600">
-                <span>FastAPI + Aer Statevector Engine</span>
+              <div className="flex items-center gap-4 text-[11px] text-slate-400">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>FastAPI + Aer Statevector Engine</span>
+                </span>
                 <span>•</span>
-                <span>React + Vite</span>
+                <span>Interactive 3D Hilbert Studio</span>
                 <span>•</span>
-                <span className="text-gray-800 font-medium">Render Ready</span>
+                <span className="text-purple-300">Render Deployable</span>
               </div>
             </div>
           </footer>
+
         </div>
       </BrowserRouter>
     </AuthProvider>

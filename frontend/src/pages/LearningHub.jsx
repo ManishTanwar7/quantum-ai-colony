@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  CheckCircle2, Award, HelpCircle, RefreshCw 
+  CheckCircle2, Award, HelpCircle, RefreshCw, BookOpen 
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -67,32 +67,32 @@ export default function LearningHub() {
 
   if (loading || !activeLesson) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-16 text-center text-gray-500 font-mono">
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center text-slate-400 font-mono">
         Loading quantum curriculum...
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 bg-white min-h-screen">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 min-h-screen">
       
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-gray-900 flex items-center gap-3">
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-white flex items-center gap-3">
             <span>Quantum Learning Hub</span>
-            <span className="text-xs px-2.5 py-0.5 rounded bg-gray-100 border border-gray-300 text-gray-700 font-mono font-normal">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 font-mono font-normal shadow-[0_0_15px_rgba(168,85,247,0.2)]">
               CURRICULUM • INTERACTIVE QUIZZES
             </span>
           </h1>
-          <p className="text-xs text-gray-600 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             Master quantum computing from single-qubit geometry to multi-qubit algorithms.
           </p>
         </div>
 
         {/* Progress Pill */}
-        <div className="flex items-center gap-2 px-3 py-1.5 bg-white rounded border border-gray-300 text-xs font-mono text-gray-700">
-          <Award className="w-4 h-4 text-gray-800" />
+        <div className="flex items-center gap-2 px-3.5 py-2 bg-slate-900/80 rounded-xl border border-slate-800 text-xs font-mono text-slate-300 shadow-md">
+          <Award className="w-4 h-4 text-amber-400" />
           <span>Completed: {userProgress.completed_lessons?.length || 0} / {lessons.length} Modules</span>
         </div>
       </div>
@@ -102,7 +102,7 @@ export default function LearningHub() {
         
         {/* Module Sidebar (4 cols) */}
         <div className="lg:col-span-4 space-y-3">
-          <h3 className="text-xs font-bold font-mono uppercase text-gray-500 px-1">
+          <h3 className="text-xs font-bold font-mono uppercase text-slate-400 px-1">
             Course Modules
           </h3>
 
@@ -115,30 +115,30 @@ export default function LearningHub() {
                 <button
                   key={lesson.id}
                   onClick={() => { setSelectedLessonId(lesson.id); resetQuiz(); }}
-                  className={`w-full text-left p-4 rounded-xl border transition-all ${
+                  className={`w-full text-left p-4 rounded-2xl border transition-all ${
                     selected
-                      ? 'bg-gray-50 border-gray-900 shadow-xs'
-                      : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-700'
+                      ? 'bg-gradient-to-r from-purple-950/60 to-slate-900/90 border-purple-500/80 shadow-[0_0_20px_rgba(168,85,247,0.2)]'
+                      : 'bg-slate-900/80 hover:bg-slate-800/80 border-slate-800 text-slate-300'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-gray-500 font-semibold uppercase">
+                    <span className="text-[10px] font-mono text-cyan-400 font-semibold uppercase">
                       Module 0{lesson.order} • {lesson.category}
                     </span>
                     {completed ? (
-                      <span className="flex items-center gap-1 text-emerald-700 text-[10px] font-mono font-medium">
+                      <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-mono font-medium">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Completed</span>
                       </span>
                     ) : (
-                      <span className="w-2 h-2 rounded-full bg-gray-300" />
+                      <span className="w-2 h-2 rounded-full bg-slate-700" />
                     )}
                   </div>
 
-                  <div className="font-bold text-sm text-gray-900 mt-1">
+                  <div className="font-bold text-sm text-white mt-1.5">
                     {lesson.title}
                   </div>
-                  <p className="text-xs text-gray-600 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                     {lesson.description}
                   </p>
                 </button>
@@ -151,13 +151,13 @@ export default function LearningHub() {
         <div className="lg:col-span-8 space-y-6">
           
           {/* Main Lesson Reader */}
-          <div className="p-6 lg:p-8 rounded-xl bg-white border border-gray-200 space-y-5 shadow-xs">
+          <div className="p-6 lg:p-8 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-6 shadow-xl backdrop-blur-xl">
             
-            <div className="border-b border-gray-200 pb-3">
-              <div className="text-xs font-mono text-gray-500 font-semibold uppercase">
+            <div className="border-b border-slate-800 pb-4">
+              <div className="text-xs font-mono text-cyan-400 font-semibold uppercase">
                 {activeLesson.category}
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mt-1">
+              <h2 className="text-2xl font-bold text-white mt-1">
                 {activeLesson.title}
               </h2>
             </div>
@@ -166,16 +166,16 @@ export default function LearningHub() {
             {activeLesson.theory_cards && activeLesson.theory_cards.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {activeLesson.theory_cards.map((card, idx) => (
-                  <div key={idx} className="p-3.5 rounded-lg bg-gray-50 border border-gray-200 text-xs space-y-1">
-                    <div className="font-bold text-gray-900 font-mono">{card.title}</div>
-                    <div className="text-gray-600 text-[11px] leading-relaxed">{card.description}</div>
+                  <div key={idx} className="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1">
+                    <div className="font-bold text-cyan-300 font-mono">{card.title}</div>
+                    <div className="text-slate-400 text-[11px] leading-relaxed">{card.description}</div>
                   </div>
                 ))}
               </div>
             )}
 
             {/* Lesson Body Content */}
-            <div className="max-w-none text-gray-800 text-sm leading-relaxed whitespace-pre-line font-sans">
+            <div className="text-slate-200 text-sm leading-relaxed whitespace-pre-line font-sans">
               {activeLesson.content_markdown}
             </div>
 
@@ -183,51 +183,51 @@ export default function LearningHub() {
 
           {/* Interactive Quiz Section */}
           {activeLesson.quiz && activeLesson.quiz.length > 0 && (
-            <div className="p-6 rounded-xl bg-white border border-gray-200 space-y-5 shadow-xs">
+            <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-6 shadow-xl backdrop-blur-xl">
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <HelpCircle className="w-5 h-5 text-gray-800" />
-                  <h3 className="text-base font-bold text-gray-900 font-mono">
+                  <HelpCircle className="w-5 h-5 text-purple-400" />
+                  <h3 className="text-base font-bold text-white font-mono">
                     Knowledge Checkpoint
                   </h3>
                 </div>
 
                 {quizResult && (
-                  <span className={`px-3 py-1 rounded text-xs font-bold font-mono ${
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold font-mono ${
                     quizResult.passed 
-                      ? 'bg-emerald-50 text-emerald-800 border border-emerald-500' 
-                      : 'bg-rose-50 text-rose-800 border border-rose-500'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                      : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
                   }`}>
                     {quizResult.score_pct}% Score {quizResult.passed ? '— Passed!' : '— Retake Recommended'}
                   </span>
                 )}
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {activeLesson.quiz.map((q, qIndex) => {
                   const selectedIdx = selectedAnswers[q.id];
                   const isSubmitted = !!quizResult;
 
                   return (
-                    <div key={q.id} className="p-4 rounded-lg bg-gray-50 border border-gray-200 space-y-3">
-                      <div className="font-semibold text-sm text-gray-900">
+                    <div key={q.id} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3">
+                      <div className="font-semibold text-sm text-slate-200">
                         {qIndex + 1}. {q.question}
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {q.options.map((opt, optIdx) => {
                           const isOptionSelected = selectedIdx === optIdx;
-                          let btnStyle = "bg-white border-gray-300 text-gray-800 hover:border-gray-900";
+                          let btnStyle = "bg-slate-900 border-slate-800 text-slate-300 hover:border-purple-500/40 hover:bg-slate-850";
 
                           if (isSubmitted) {
                             if (optIdx === q.correct_index) {
-                              btnStyle = "bg-emerald-50 border-emerald-600 text-emerald-900 font-bold";
+                              btnStyle = "bg-emerald-950/60 border-emerald-500 text-emerald-300 font-semibold shadow-[0_0_10px_rgba(52,211,153,0.2)]";
                             } else if (isOptionSelected) {
-                              btnStyle = "bg-rose-50 border-rose-500 text-rose-900";
+                              btnStyle = "bg-rose-950/60 border-rose-500 text-rose-300";
                             }
                           } else if (isOptionSelected) {
-                            btnStyle = "bg-gray-200 border-gray-900 text-gray-900 font-bold";
+                            btnStyle = "bg-purple-900/40 border-purple-500 text-purple-200 font-semibold shadow-[0_0_10px_rgba(168,85,247,0.2)]";
                           }
 
                           return (
@@ -235,9 +235,9 @@ export default function LearningHub() {
                               key={optIdx}
                               disabled={isSubmitted}
                               onClick={() => handleSelectOption(q.id, optIdx)}
-                              className={`p-3 rounded border text-left text-xs transition-colors ${btnStyle}`}
+                              className={`p-3 rounded-xl border text-left text-xs transition-all ${btnStyle}`}
                             >
-                              <span className="font-mono mr-2 text-gray-500">[{String.fromCharCode(65 + optIdx)}]</span>
+                              <span className="font-mono mr-2 text-slate-500">[{String.fromCharCode(65 + optIdx)}]</span>
                               <span>{opt}</span>
                             </button>
                           );
@@ -246,8 +246,8 @@ export default function LearningHub() {
 
                       {/* Explanation card after submit */}
                       {isSubmitted && (
-                        <div className="p-3 bg-white rounded border border-gray-300 text-xs text-gray-700 font-mono">
-                          <strong className="text-gray-900">Explanation:</strong> {q.explanation}
+                        <div className="p-3 bg-slate-900/90 rounded-lg border border-slate-800 text-xs text-slate-400 font-mono">
+                          <strong className="text-cyan-300">Explanation:</strong> {q.explanation}
                         </div>
                       )}
                     </div>
@@ -260,7 +260,7 @@ export default function LearningHub() {
                 {quizResult ? (
                   <button
                     onClick={resetQuiz}
-                    className="flex items-center gap-1.5 px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 text-xs rounded border border-gray-900 font-mono font-medium transition-colors"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs rounded-xl border border-slate-700 font-mono transition-colors"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
                     <span>Retake Quiz</span>
@@ -269,7 +269,7 @@ export default function LearningHub() {
                   <button
                     onClick={handleSubmitQuiz}
                     disabled={Object.keys(selectedAnswers).length < activeLesson.quiz.length}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed text-gray-900 font-bold text-xs rounded border border-gray-900 transition-colors"
+                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 disabled:opacity-40 disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl shadow-lg transition-all hover:scale-105"
                   >
                     <Award className="w-4 h-4" />
                     <span>Submit Answers & Record Progress</span>

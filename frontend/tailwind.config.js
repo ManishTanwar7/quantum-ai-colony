@@ -8,30 +8,24 @@ export default {
     extend: {
       colors: {
         quantum: {
-          dark: "#ffffff",
-          surface: "#ffffff",
-          card: "#f9fafb",
-          border: "#e5e7eb",
-          cyan: "#0284c7",
-          purple: "#6b7280",
-          emerald: "#15803d",
-          rose: "#dc2626",
-          gold: "#b45309"
-        },
-        office: {
-          bg: "#ffffff",
-          panel: "#f9fafb",
-          muted: "#f3f4f6",
-          border: "#e5e7eb",
-          darkborder: "#111827",
-          heading: "#1f2937",
-          text: "#111827",
-          subtext: "#4b5563"
+          dark: "#070b16",
+          surface: "#0f172a",
+          card: "#131d38",
+          border: "#334155",
+          cyan: "#38bdf8",
+          purple: "#a855f7",
+          emerald: "#34d399",
+          rose: "#f43f5e",
+          gold: "#fbbf24"
         }
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace', 'Courier New']
+      },
+      animation: {
+        'spin-slow': 'spin 20s linear infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       }
     },
   },
