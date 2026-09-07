@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Globe, Sparkles, ArrowRight, Zap, Shield } from 'lucide-react';
+import { Sparkles, ArrowRight, Shield } from 'lucide-react';
 
 export default function EarthWebGlobe({ onComplete }) {
   const canvasRef = useRef(null);
@@ -13,8 +13,7 @@ export default function EarthWebGlobe({ onComplete }) {
     const ctx = canvas.getContext('2d');
     let animId;
 
-    // Generate network nodes on a sphere
-    const numNodes = 70;
+    const numNodes = 65;
     const nodes = [];
     for (let i = 0; i < numNodes; i++) {
       const phi = Math.acos(-1 + (2 * i) / numNodes);
@@ -23,13 +22,13 @@ export default function EarthWebGlobe({ onComplete }) {
         x: Math.cos(theta) * Math.sin(phi),
         y: Math.sin(theta) * Math.sin(phi),
         z: Math.cos(phi),
-        baseSize: Math.random() * 2 + 1.5,
+        baseSize: Math.random() * 1.8 + 1.2,
         pulse: Math.random() * Math.PI * 2,
       });
     }
 
     let rotY = 0;
-    let rotX = 0.25;
+    let rotX = 0.22;
     let scaleMultiplier = 1;
 
     const render = () => {
@@ -41,9 +40,9 @@ export default function EarthWebGlobe({ onComplete }) {
 
       ctx.clearRect(0, 0, width, height);
 
-      rotY += 0.008;
+      // Slow, calm rotation (0.0018 instead of fast 0.008)
+      rotY += 0.0018;
 
-      // Project 3D point to 2D
       const project = (node) => {
         const cosY = Math.cos(rotY);
         const sinY = Math.sin(rotY);
@@ -68,7 +67,7 @@ export default function EarthWebGlobe({ onComplete }) {
         node,
       }));
 
-      // Draw globe halo / atmosphere
+      // Subtle atmospheric halo (deep purple & obsidian)
       const grad = ctx.createRadialGradient(
         centerX,
         centerY,
@@ -77,16 +76,16 @@ export default function EarthWebGlobe({ onComplete }) {
         centerY,
         baseRadius * 1.2
       );
-      grad.addColorStop(0, 'rgba(0, 240, 255, 0.04)');
-      grad.addColorStop(0.7, 'rgba(157, 78, 221, 0.08)');
+      grad.addColorStop(0, 'rgba(139, 92, 246, 0.05)');
+      grad.addColorStop(0.7, 'rgba(124, 58, 237, 0.06)');
       grad.addColorStop(1, 'transparent');
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(centerX, centerY, baseRadius * 1.2, 0, Math.PI * 2);
       ctx.fill();
 
-      // Draw Earth latitude / longitude rings
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.12)';
+      // Earth rings in muted violet
+      ctx.strokeStyle = 'rgba(168, 85, 247, 0.15)';
       ctx.lineWidth = 1;
 
       // Equator
@@ -106,8 +105,8 @@ export default function EarthWebGlobe({ onComplete }) {
       }
       ctx.stroke();
 
-      // Draw network connection lines (quantum web mesh)
-      ctx.lineWidth = 0.8;
+      // Web connections in soft lavender/purple
+      ctx.lineWidth = 0.7;
       for (let i = 0; i < projected.length; i++) {
         const p1 = projected[i];
         if (!p1.visible) continue;
@@ -120,9 +119,9 @@ export default function EarthWebGlobe({ onComplete }) {
           const dy = p1.py - p2.py;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < baseRadius * 0.45) {
-            const alpha = (1 - dist / (baseRadius * 0.45)) * 0.4;
-            ctx.strokeStyle = `rgba(0, 240, 255, ${alpha})`;
+          if (dist < baseRadius * 0.42) {
+            const alpha = (1 - dist / (baseRadius * 0.42)) * 0.35;
+            ctx.strokeStyle = `rgba(168, 85, 247, ${alpha})`;
             ctx.beginPath();
             ctx.moveTo(p1.px, p1.py);
             ctx.lineTo(p2.px, p2.py);
@@ -131,25 +130,27 @@ export default function EarthWebGlobe({ onComplete }) {
         }
       }
 
-      // Draw glowing nodes (planetary quantum repeaters)
-      projected.forEach((p) => {
+      // Glowing nodes (warm amber and violet stars)
+      projected.forEach((p, idx) => {
         if (!p.visible) return;
         const depthAlpha = (p.pz + 1) / 2;
-        p.node.pulse += 0.05;
-        const pulseSize = p.node.baseSize + Math.sin(p.node.pulse) * 0.8;
+        p.node.pulse += 0.03;
+        const pulseSize = p.node.baseSize + Math.sin(p.node.pulse) * 0.6;
+        const isAmber = idx % 4 === 0;
 
         ctx.save();
-        ctx.shadowColor = '#00f0ff';
-        ctx.shadowBlur = 8;
-        ctx.fillStyle = `rgba(0, 240, 255, ${Math.max(0.2, depthAlpha)})`;
+        ctx.shadowColor = isAmber ? '#f59e0b' : '#a855f7';
+        ctx.shadowBlur = 6;
+        ctx.fillStyle = isAmber 
+          ? `rgba(245, 158, 11, ${Math.max(0.2, depthAlpha)})`
+          : `rgba(168, 85, 247, ${Math.max(0.2, depthAlpha)})`;
         ctx.beginPath();
         ctx.arc(p.px, p.py, pulseSize, 0, Math.PI * 2);
         ctx.fill();
 
-        // Core bright center
         ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.arc(p.px, p.py, pulseSize * 0.4, 0, Math.PI * 2);
+        ctx.arc(p.px, p.py, pulseSize * 0.35, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       });
@@ -159,7 +160,6 @@ export default function EarthWebGlobe({ onComplete }) {
 
     render();
 
-    // Countdown & expansion timer
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
@@ -190,18 +190,18 @@ export default function EarthWebGlobe({ onComplete }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 1.25 }}
       transition={{ duration: 0.8 }}
-      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#050814] transition-all duration-700 ${
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#090d16] transition-all duration-700 ${
         isExpanding ? 'scale-125 opacity-0 pointer-events-none' : ''
       }`}
     >
-      {/* Background cyber radial glow */}
-      <div className="absolute w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Background soft ambient lighting */}
+      <div className="absolute w-[600px] h-[600px] bg-purple-900/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       {/* Header HUD Status */}
       <div className="relative z-10 text-center space-y-2 mb-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-300 text-xs font-mono">
-          <Sparkles className="w-3.5 h-3.5 animate-spin" />
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-800 text-purple-300 text-xs font-mono">
+          <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <span>GLOBAL QUANTUM SYNAPSE INITIALIZATION</span>
         </div>
         <h1 className="text-2xl lg:text-4xl font-extrabold tracking-tight text-white font-mono">
@@ -221,9 +221,8 @@ export default function EarthWebGlobe({ onComplete }) {
           className="w-[320px] sm:w-[480px] lg:w-[560px] aspect-[7/6]"
         />
 
-        {/* Center orbital core text */}
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <div className="text-[11px] font-mono text-cyan-400/80 uppercase tracking-widest">
+          <div className="text-[11px] font-mono text-purple-400/80 uppercase tracking-widest">
             SYNAPSE MESH
           </div>
           <div className="text-2xl font-bold font-mono text-white mt-0.5">
@@ -232,11 +231,11 @@ export default function EarthWebGlobe({ onComplete }) {
         </div>
       </div>
 
-      {/* Bottom Controls & Skip Button */}
+      {/* Bottom Controls */}
       <div className="relative z-10 mt-6 flex flex-col items-center gap-3">
         <button
           onClick={triggerExpansion}
-          className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-cyan-500/20 to-purple-600/20 hover:from-cyan-500/30 hover:to-purple-600/30 text-cyan-300 border border-cyan-500/40 rounded-xl text-xs font-mono font-semibold shadow-[0_0_15px_rgba(0,240,255,0.2)] transition-all hover:scale-105"
+          className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white border border-purple-500/40 rounded-xl text-xs font-mono font-semibold shadow-lg transition-all hover:scale-105"
         >
           <span>Enter Command Deck</span>
           <ArrowRight className="w-4 h-4" />

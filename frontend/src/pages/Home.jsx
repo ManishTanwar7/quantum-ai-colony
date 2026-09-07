@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { 
-  Atom, Cpu, Terminal, BookOpen, Trophy, ShieldCheck, 
-  Sparkles, ArrowRight, Zap, Bug, Eye, Play, CheckCircle2 
+  Cpu, Terminal, ArrowRight, Play, BookOpen, Trophy
 } from 'lucide-react';
-import EarthWebGlobe from '../components/EarthWebGlobe';
 import CommandDeck from '../components/CommandDeck';
 import MissionGuidanceModal from '../components/MissionGuidanceModal';
 
@@ -86,129 +84,118 @@ const GAMIFIED_MISSIONS = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const [showIntro, setShowIntro] = useState(true);
   const [activeMission, setActiveMission] = useState(null);
 
   const handleLaunchToColony = (title, prompt) => {
-    // Navigate to Colony Station with preloaded prompt
     sessionStorage.setItem('colony_launch_prompt', prompt);
     sessionStorage.setItem('colony_launch_title', title);
     navigate('/colony');
   };
 
   return (
-    <div className="min-h-screen bg-[#050814] relative">
-      
-      {/* 1. Earth Web Network Globe Intro (3-5 second reveal) */}
-      <AnimatePresence>
-        {showIntro && (
-          <EarthWebGlobe onComplete={() => setShowIntro(false)} />
-        )}
-      </AnimatePresence>
-
-      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-16">
+    <div className="min-h-screen bg-white">
+      <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8 space-y-12">
         
-        {/* 2. Hero Section */}
-        <div className="relative rounded-3xl p-8 lg:p-14 bg-gradient-to-b from-[#0e173e] via-quantum-surface to-quantum-dark border border-cyan-500/30 overflow-hidden shadow-[0_0_50px_rgba(0,240,255,0.1)]">
-          <div className="absolute -right-20 -top-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 max-w-3xl space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/40 text-cyan-300 text-xs font-mono">
-              <Sparkles className="w-3.5 h-3.5" />
+        {/* 1. Hero Section (Clean Office Style) */}
+        <div className="rounded-xl p-8 lg:p-12 bg-gray-50 border border-gray-200">
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-white border border-gray-300 text-gray-700 text-xs font-mono">
+              <span className="w-2 h-2 rounded-full bg-gray-900" />
               <span>Autonomous Multi-Agent Quantum Computing Platform</span>
             </div>
 
-            <h1 className="text-4xl lg:text-6xl font-extrabold tracking-tight leading-tight text-white">
-              Pioneer Quantum Circuits with{' '}
-              <span className="bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-400 bg-clip-text text-transparent">
-                Colony Intelligence
-              </span>
+            <h1 className="text-3xl lg:text-5xl font-extrabold tracking-tight text-gray-900">
+              Quantum Circuit Design with Colony Intelligence
             </h1>
 
-            <p className="text-base lg:text-lg text-slate-300 leading-relaxed font-light">
-              Collaborate with 5 autonomous AI agents along an animated railway track. Synthesize circuits, eliminate decoherence, optimize gate depth, and project statevectors onto 3D Bloch spheres.
+            <p className="text-base text-gray-700 leading-relaxed">
+              Coordinate 5 specialized AI agents across theory, circuit synthesis, coherence auditing, depth optimization, and 3D Bloch sphere projections. Easy to navigate and deploy in seconds.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 to="/colony"
-                className="flex items-center gap-2 px-6 py-3.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-sm rounded-xl shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all hover:scale-105"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-100 text-gray-900 font-bold text-xs rounded border border-gray-900 transition-colors"
               >
-                <Cpu className="w-4 h-4" />
+                <Cpu className="w-4 h-4 text-gray-900" />
                 <span>Launch Colony Station</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               <Link
                 to="/lab"
-                className="flex items-center gap-2 px-6 py-3.5 bg-quantum-surface hover:bg-slate-800 text-slate-200 font-semibold text-sm rounded-xl border border-quantum-border hover:border-cyan-400/60 transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-100 text-gray-800 font-medium text-xs rounded border border-gray-300 transition-colors"
               >
-                <Terminal className="w-4 h-4 text-cyan-400" />
+                <Terminal className="w-4 h-4 text-gray-700" />
                 <span>Quantum Circuit Studio</span>
+              </Link>
+
+              <Link
+                to="/learning"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-gray-100 text-gray-800 font-medium text-xs rounded border border-gray-300 transition-colors"
+              >
+                <BookOpen className="w-4 h-4 text-gray-700" />
+                <span>Learning Hub</span>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* 3. Central Command Deck (5 Labeled Modules) */}
+        {/* 2. Central Command Deck (5 Labeled Modules) */}
         <CommandDeck />
 
-        {/* 4. Gamified Missions Section */}
-        <div className="space-y-6">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <div className="text-xs font-mono uppercase text-cyan-400 tracking-wider">
-                Interactive Directives
-              </div>
-              <h2 className="text-2xl lg:text-3xl font-bold text-white mt-1">
-                Gamified Colony Missions
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Click any mission to inspect step-by-step guidance or deploy directly to the AI colony
-              </p>
+        {/* 3. Gamified Missions Section */}
+        <div className="space-y-4">
+          <div>
+            <div className="text-xs font-mono uppercase text-gray-500 tracking-wider">
+              Interactive Directives
             </div>
+            <h2 className="text-2xl font-bold text-gray-900 mt-1">
+              Colony Missions
+            </h2>
+            <p className="text-xs text-gray-600 mt-0.5">
+              Select any mission to inspect step-by-step guidance or deploy directly to the AI colony
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {GAMIFIED_MISSIONS.map((m) => (
-              <motion.div
+              <div
                 key={m.id}
-                whileHover={{ y: -4 }}
                 onClick={() => setActiveMission(m)}
-                className="cursor-pointer p-6 rounded-2xl bg-quantum-surface border border-quantum-border hover:border-cyan-400/60 transition-all space-y-4 shadow-xl flex flex-col justify-between group"
+                className="cursor-pointer p-5 rounded-xl bg-white border border-gray-200 hover:border-gray-900 hover:bg-gray-50/50 transition-all space-y-3 flex flex-col justify-between group shadow-xs"
               >
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-cyan-300 font-semibold">
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-gray-100 border border-gray-300 text-gray-800 font-semibold">
                       {m.difficulty}
                     </span>
-                    <span className="text-[10px] text-slate-500 font-mono">
+                    <span className="text-[10px] text-gray-500 font-mono">
                       {m.steps.length} Phases
                     </span>
                   </div>
 
-                  <h3 className="font-bold text-base text-white group-hover:text-cyan-300 transition-colors">
+                  <h3 className="font-bold text-base text-gray-900 group-hover:underline">
                     {m.title}
                   </h3>
 
-                  <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">
+                  <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
                     {m.prompt}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-quantum-border/60 flex items-center justify-between text-xs font-mono text-cyan-400">
-                  <span>View Step Guidance</span>
-                  <Play className="w-3.5 h-3.5 fill-cyan-400" />
+                <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs font-mono text-gray-900 font-medium">
+                  <span className="group-hover:underline">View Step Guidance</span>
+                  <Play className="w-3 h-3 fill-gray-900" />
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
 
       </div>
 
-      {/* 5. Step-by-Step Guidance Modal */}
+      {/* 4. Step-by-Step Guidance Modal */}
       <AnimatePresence>
         {activeMission && (
           <MissionGuidanceModal

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -18,10 +18,10 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col bg-[#050814] text-slate-100 font-['Inter',sans-serif]">
+        <div className="min-h-screen flex flex-col bg-white text-gray-900 font-sans">
           <Navbar wsConnected={wsConnected} />
 
-          <main className="flex-1">
+          <main className="flex-1 bg-white">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/colony" element={<ColonyStation />} />
@@ -40,21 +40,21 @@ export default function App() {
             </Routes>
           </main>
 
-          {/* Footer */}
-          <footer className="border-t border-quantum-border/60 bg-quantum-dark/80 py-8 px-4 lg:px-8 mt-16 text-xs text-slate-500 font-mono">
+          {/* Clean Office Footer */}
+          <footer className="border-t border-gray-200 bg-gray-100 py-6 px-4 lg:px-8 mt-12 text-xs text-gray-600 font-mono">
             <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-2 text-slate-400">
-                <Atom className="w-4 h-4 text-cyan-400" />
-                <span className="font-bold text-slate-200">QUANTUM AI COLONY</span>
-                <span>• v1.0.0 Production Edition</span>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Atom className="w-4 h-4 text-gray-900" />
+                <span className="font-bold text-gray-900 tracking-wide">QUANTUM AI COLONY</span>
+                <span>• Professional Edition</span>
               </div>
 
-              <div className="flex items-center gap-4 text-[11px]">
+              <div className="flex items-center gap-4 text-[11px] text-gray-600">
                 <span>FastAPI + Aer Statevector Engine</span>
                 <span>•</span>
-                <span>React + Framer Motion</span>
+                <span>React + Vite</span>
                 <span>•</span>
-                <span className="text-emerald-400">Deployable on Render</span>
+                <span className="text-gray-800 font-medium">Render Ready</span>
               </div>
             </div>
           </footer>

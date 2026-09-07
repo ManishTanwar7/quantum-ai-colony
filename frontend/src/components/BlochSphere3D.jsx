@@ -1,11 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { RotateCw, Compass, Info } from 'lucide-react';
+import { Compass, Play, Pause, RotateCcw, Gauge } from 'lucide-react';
 
 export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, onSelectQubit }) {
   const canvasRef = useRef(null);
-  const [autoRotate, setAutoRotate] = useState(true);
-  const [rotX, setRotX] = useState(0.4);
-  const [rotY, setRotY] = useState(0.5);
+  const [speedMultiplier, setSpeedMultiplier] = useState(0.2); // Calm, slow default speed
+  const [isRotating, setIsRotating] = useState(true);
+  
+  const rotXRef = useRef(0.35);
+  const rotYRef = useRef(0.4);
   const isDraggingRef = useRef(false);
   const lastMouseRef = useRef({ x: 0, y: 0 });
 
@@ -26,21 +28,25 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
 
       ctx.clearRect(0, 0, width, height);
 
-      // Auto rotation
-      if (autoRotate && !isDraggingRef.current) {
-        setRotY((prev) => prev + 0.005);
+      // Clean white canvas background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
+      // Slow, controlled rotation
+      if (isRotating && speedMultiplier > 0 && !isDraggingRef.current) {
+        rotYRef.current += 0.0006 * speedMultiplier;
       }
 
-      // Projection helper: 3D (x, y, z) -> 2D (px, py)
-      // Standard Bloch sphere: z is UP, x is forward-right, y is into page
+      const rotX = rotXRef.current;
+      const rotY = rotYRef.current;
+
+      // 3D to 2D projection
       const project = (x, y, z) => {
-        // Rotate around Y axis
         const cosY = Math.cos(rotY);
         const sinY = Math.sin(rotY);
         const x1 = x * cosY + y * sinY;
         const y1 = -x * sinY + y * cosY;
 
-        // Rotate around X axis
         const cosX = Math.cos(rotX);
         const sinX = Math.sin(rotX);
         const y2 = y1 * cosX - z * sinX;
@@ -53,24 +59,25 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
         };
       };
 
-      // 1. Draw outer sphere glow
-      const grad = ctx.createRadialGradient(centerX, centerY, radius * 0.2, centerX, centerY, radius);
-      grad.addColorStop(0, 'rgba(0, 240, 255, 0.08)');
-      grad.addColorStop(0.8, 'rgba(11, 17, 44, 0.6)');
-      grad.addColorStop(1, 'rgba(0, 240, 255, 0.25)');
+      // 1. Outer sphere fill with subtle light neutral tint
+      const grad = ctx.createRadialGradient(centerX, centerY, radius * 0.1, centerX, centerY, radius);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.85, '#f9fafb');
+      grad.addColorStop(1, '#f3f4f6');
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Outer boundary ring
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+      // Outer boundary ring (clean neutral gray)
+      ctx.strokeStyle = '#d1d5db';
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
-      // 2. Draw Equator Ring (z = 0)
+      // 2. Equator Ring (z = 0)
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(157, 78, 221, 0.45)';
+      ctx.strokeStyle = '#9ca3af';
+      ctx.lineWidth = 1.0;
       ctx.setLineDash([4, 4]);
       for (let angle = 0; angle <= Math.PI * 2; angle += 0.05) {
         const p = project(Math.cos(angle), Math.sin(angle), 0);
@@ -80,7 +87,7 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // 3. Draw Coordinate Axes: X, Y, Z
+      // 3. Coordinate Axes (Crisp Dark Gray / Slate, highly legible)
       const drawAxis = (x, y, z, label, color) => {
         const start = project(-x * 1.15, -y * 1.15, -z * 1.15);
         const end = project(x * 1.15, y * 1.15, z * 1.15);
@@ -92,23 +99,22 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
         ctx.lineTo(end.px, end.py);
         ctx.stroke();
 
-        // Label
-        ctx.fillStyle = color;
+        ctx.fillStyle = '#111827';
         ctx.font = 'bold 11px monospace';
-        ctx.fillText(label, end.px + 6, end.py + 4);
+        ctx.fillText(label, end.px + 5, end.py + 4);
       };
 
-      drawAxis(0, 0, 1, '|0⟩ (+Z)', '#06b6d4');  // North
-      drawAxis(1, 0, 0, '|+⟩ (+X)', '#10b981');  // X
-      drawAxis(0, 1, 0, '|+i⟩ (+Y)', '#f59e0b'); // Y
+      drawAxis(0, 0, 1, '|0⟩ (+Z)', '#374151');
+      drawAxis(1, 0, 0, '|+⟩ (+X)', '#4b5563');
+      drawAxis(0, 1, 0, '|+i⟩ (+Y)', '#6b7280');
 
       // South pole label
       const south = project(0, 0, -1.15);
-      ctx.fillStyle = '#ef4444';
+      ctx.fillStyle = '#111827';
       ctx.font = 'bold 11px monospace';
-      ctx.fillText('|1⟩ (-Z)', south.px + 6, south.py + 4);
+      ctx.fillText('|1⟩ (-Z)', south.px + 5, south.py + 4);
 
-      // 4. Draw State Vector Arrow
+      // 4. State Vector Arrow (Solid Charcoal / Black, crisp and high-contrast)
       const vx = activeVector.x || 0;
       const vy = activeVector.y || 0;
       const vz = activeVector.z !== undefined ? activeVector.z : 1;
@@ -116,28 +122,11 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
       const origin = project(0, 0, 0);
       const tip = project(vx, vy, vz);
 
-      // Vector line with neon glow
-      ctx.save();
-      ctx.shadowColor = '#00f0ff';
-      ctx.shadowBlur = 12;
-      ctx.beginPath();
-      ctx.strokeStyle = '#00f0ff';
-      ctx.lineWidth = 3.5;
-      ctx.moveTo(origin.px, origin.py);
-      ctx.lineTo(tip.px, tip.py);
-      ctx.stroke();
-
-      // Vector tip sphere
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      ctx.arc(tip.px, tip.py, 5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-
-      // Projection point on equator (dashed line to show theta/phi)
+      // Equator projection dashed line
       const equatorProj = project(vx, vy, 0);
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.strokeStyle = '#9ca3af';
+      ctx.lineWidth = 1.0;
       ctx.setLineDash([2, 2]);
       ctx.moveTo(tip.px, tip.py);
       ctx.lineTo(equatorProj.px, equatorProj.py);
@@ -145,14 +134,28 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
       ctx.stroke();
       ctx.setLineDash([]);
 
+      // State vector arrow line
+      ctx.beginPath();
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = 2.5;
+      ctx.moveTo(origin.px, origin.py);
+      ctx.lineTo(tip.px, tip.py);
+      ctx.stroke();
+
+      // Vector tip sphere
+      ctx.fillStyle = '#111827';
+      ctx.beginPath();
+      ctx.arc(tip.px, tip.py, 4, 0, Math.PI * 2);
+      ctx.fill();
+
       animId = requestAnimationFrame(render);
     };
 
     render();
     return () => cancelAnimationFrame(animId);
-  }, [rotX, rotY, autoRotate, activeVector]);
+  }, [isRotating, speedMultiplier, activeVector]);
 
-  // Mouse drag handlers for rotating sphere
+  // Drag rotation handlers
   const handleMouseDown = (e) => {
     isDraggingRef.current = true;
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
@@ -164,61 +167,100 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
     const dy = e.clientY - lastMouseRef.current.y;
     lastMouseRef.current = { x: e.clientX, y: e.clientY };
 
-    setRotY((prev) => prev + dx * 0.01);
-    setRotX((prev) => Math.max(-1.5, Math.min(1.5, prev + dy * 0.01)));
+    rotYRef.current += dx * 0.008;
+    rotXRef.current = Math.max(-1.5, Math.min(1.5, rotXRef.current + dy * 0.008));
   };
 
   const handleMouseUp = () => {
     isDraggingRef.current = false;
   };
 
+  const resetView = () => {
+    rotXRef.current = 0.35;
+    rotYRef.current = 0.4;
+  };
+
   return (
-    <div className="flex flex-col bg-quantum-surface border border-quantum-border rounded-2xl p-4 shadow-xl">
+    <div className="flex flex-col bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
       
       {/* Header & Qubit Selection */}
-      <div className="flex items-center justify-between gap-3 mb-2">
+      <div className="flex items-center justify-between gap-3 mb-2.5">
         <div className="flex items-center gap-2">
-          <Compass className="w-4 h-4 text-cyan-400" />
-          <h4 className="text-xs font-bold font-mono uppercase text-slate-200">
-            3D Bloch Sphere Visualizer
+          <Compass className="w-4 h-4 text-gray-800" />
+          <h4 className="text-xs font-bold font-mono uppercase text-gray-900">
+            Bloch Sphere Visualizer
           </h4>
         </div>
 
-        <div className="flex items-center gap-2">
-          {/* Qubit Selector */}
-          {blochVectors.length > 1 && (
-            <div className="flex items-center gap-1 bg-slate-900 px-2 py-1 rounded-lg border border-slate-800 text-xs font-mono">
-              <span className="text-slate-400 text-[10px]">Qubit:</span>
-              {blochVectors.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => onSelectQubit && onSelectQubit(i)}
-                  className={`px-1.5 py-0.5 rounded text-[11px] ${
-                    selectedQubit === i ? 'bg-cyan-500 text-black font-bold' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  q{i}
-                </button>
-              ))}
-            </div>
-          )}
+        {/* Qubit Selector */}
+        {blochVectors.length > 1 && (
+          <div className="flex items-center gap-1 bg-gray-100 px-2 py-0.5 rounded border border-gray-200 text-xs font-mono">
+            <span className="text-gray-500 text-[10px]">Qubit:</span>
+            {blochVectors.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => onSelectQubit && onSelectQubit(i)}
+                className={`px-1.5 py-0.5 rounded text-[11px] transition-colors ${
+                  selectedQubit === i 
+                    ? 'bg-white border border-gray-900 text-gray-900 font-bold shadow-xs' 
+                    : 'text-gray-600 hover:text-black'
+                }`}
+              >
+                q{i}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
 
-          {/* Auto rotate toggle */}
+      {/* Speed & Rotation Control Bar (Flat Style) */}
+      <div className="flex items-center justify-between bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-mono mb-2.5">
+        <div className="flex items-center gap-1.5 text-gray-700 text-[11px]">
+          <Gauge className="w-3.5 h-3.5 text-gray-600" />
+          <span>Rotation:</span>
+        </div>
+
+        <div className="flex items-center gap-1">
           <button
-            onClick={() => setAutoRotate(!autoRotate)}
-            className={`p-1.5 rounded-lg border text-xs transition-colors ${
-              autoRotate ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'
-            }`}
-            title="Toggle Auto-Rotation"
+            onClick={() => setIsRotating(!isRotating)}
+            className="px-2 py-0.5 rounded text-[11px] bg-white border border-gray-900 text-gray-900 hover:bg-gray-100 flex items-center gap-1 font-medium transition-colors"
+            title="Pause / Resume Rotation"
           >
-            <RotateCw className={`w-3.5 h-3.5 ${autoRotate ? 'animate-spin' : ''}`} style={{ animationDuration: '8s' }} />
+            {isRotating ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 fill-gray-900" />}
+            <span>{isRotating ? 'Pause' : 'Play'}</span>
+          </button>
+
+          {[
+            { label: '0.2x', val: 0.2 },
+            { label: '0.5x', val: 0.5 },
+            { label: '1.0x', val: 1.0 },
+          ].map((s) => (
+            <button
+              key={s.label}
+              onClick={() => { setSpeedMultiplier(s.val); setIsRotating(true); }}
+              className={`px-1.5 py-0.5 rounded text-[11px] transition-colors ${
+                isRotating && speedMultiplier === s.val
+                  ? 'bg-gray-200 border border-gray-900 text-gray-900 font-bold'
+                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+
+          <button
+            onClick={resetView}
+            className="p-1 bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 rounded transition-colors"
+            title="Reset Orientation"
+          >
+            <RotateCcw className="w-3 h-3" />
           </button>
         </div>
       </div>
 
-      {/* 3D Canvas */}
+      {/* 3D Canvas on Clean White Card */}
       <div 
-        className="relative flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
+        className="relative flex items-center justify-center cursor-grab active:cursor-grabbing select-none border border-gray-100 rounded-lg p-1 bg-white"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -227,31 +269,31 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
         <canvas
           ref={canvasRef}
           width={320}
-          height={260}
-          className="rounded-xl w-full max-w-[320px] aspect-[4/3]"
+          height={250}
+          className="w-full max-w-[320px] aspect-[4/3] rounded"
         />
-        <div className="absolute bottom-2 left-2 text-[10px] text-slate-500 font-mono pointer-events-none">
-          Drag to rotate 3D sphere
+        <div className="absolute bottom-2 left-2 text-[10px] text-gray-500 font-mono pointer-events-none">
+          Drag to rotate view
         </div>
       </div>
 
-      {/* Numerical State Vector Coordinates */}
-      <div className="mt-3 pt-3 border-t border-quantum-border/60 grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
-        <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
-          <div className="text-slate-400 text-[10px]">X Component</div>
-          <div className="font-bold text-emerald-400">{activeVector.x?.toFixed(3) || '0.000'}</div>
+      {/* Numerical State Vector Coordinates in Neutral Cards */}
+      <div className="mt-3 pt-3 border-t border-gray-200 grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
+        <div className="bg-gray-50 p-2 rounded border border-gray-200">
+          <div className="text-gray-500 text-[10px]">X Component</div>
+          <div className="font-bold text-gray-900">{activeVector.x?.toFixed(3) || '0.000'}</div>
         </div>
-        <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
-          <div className="text-slate-400 text-[10px]">Y Component</div>
-          <div className="font-bold text-amber-400">{activeVector.y?.toFixed(3) || '0.000'}</div>
+        <div className="bg-gray-50 p-2 rounded border border-gray-200">
+          <div className="text-gray-500 text-[10px]">Y Component</div>
+          <div className="font-bold text-gray-900">{activeVector.y?.toFixed(3) || '0.000'}</div>
         </div>
-        <div className="bg-slate-900/80 p-2 rounded-lg border border-slate-800">
-          <div className="text-slate-400 text-[10px]">Z Component</div>
-          <div className="font-bold text-cyan-400">{activeVector.z?.toFixed(3) || '1.000'}</div>
+        <div className="bg-gray-50 p-2 rounded border border-gray-200">
+          <div className="text-gray-500 text-[10px]">Z Component</div>
+          <div className="font-bold text-gray-900">{activeVector.z?.toFixed(3) || '1.000'}</div>
         </div>
       </div>
 
-      <div className="mt-2 text-[10px] text-slate-400 text-center font-mono">
+      <div className="mt-2 text-[10px] text-gray-600 text-center font-mono">
         θ = {((activeVector.theta || 0) * (180 / Math.PI)).toFixed(1)}° | φ = {((activeVector.phi || 0) * (180 / Math.PI)).toFixed(1)}°
       </div>
 

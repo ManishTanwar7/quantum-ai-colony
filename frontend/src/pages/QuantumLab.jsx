@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Terminal, Play, Save, Download, Sparkles, Sliders, 
-  RotateCcw, Code2, Layers, CheckCircle2 
+  Layers, Code2, Save, CheckCircle2 
 } from 'lucide-react';
 import CircuitBuilder from '../components/CircuitBuilder';
 import CodeEditor from '../components/CodeEditor';
@@ -19,7 +18,7 @@ export default function QuantumLab() {
     { gate: 'CX', control: 0, target: 1, step: 1 }
   ]);
   const [qiskitCode, setQiskitCode] = useState('');
-  const [activeTab, setActiveTab] = useState('grid'); // 'grid' | 'code'
+  const [activeTab, setActiveTab] = useState('grid');
   const [isRunning, setIsRunning] = useState(false);
   const [selectedQubit, setSelectedQubit] = useState(0);
   const [saveTitle, setSaveTitle] = useState('');
@@ -101,7 +100,6 @@ export default function QuantumLab() {
   };
 
   const handleSyncCodeToGrid = () => {
-    // Quick regex parsing from code editor
     const singleMatches = [...qiskitCode.matchAll(/qc\.([a-z]+)\((\d+)\)/g)];
     const twoMatches = [...qiskitCode.matchAll(/qc\.([a-z]+)\((\d+),\s*(\d+)\)/g)];
 
@@ -152,42 +150,42 @@ export default function QuantumLab() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-6 space-y-6 bg-white min-h-screen">
       
       {/* Studio Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-white flex items-center gap-3">
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-gray-900 flex items-center gap-2.5">
             <span>Quantum Circuit Studio</span>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-950 border border-cyan-800 text-cyan-300 font-mono font-normal">
+            <span className="text-xs px-2 py-0.5 rounded bg-gray-100 border border-gray-300 text-gray-700 font-mono font-normal">
               AER SIMULATOR • EXACT STATEVECTOR
             </span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-gray-600 mt-1">
             Design unitary quantum circuits with visual drag-and-drop or Python Qiskit code.
           </p>
         </div>
 
-        {/* View mode switcher & Save dialog */}
+        {/* View mode switcher & Save dialog (Flat Style) */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <div className="flex items-center bg-gray-100 p-0.5 rounded border border-gray-300 text-xs">
             <button
               onClick={() => setActiveTab('grid')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors font-mono ${
-                activeTab === 'grid' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold' : 'text-slate-400 hover:text-slate-200'
+              className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors font-mono ${
+                activeTab === 'grid' ? 'bg-white text-gray-900 border border-gray-900 font-bold shadow-xs' : 'text-gray-600 hover:text-black'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Grid Builder</span>
+              <span>Grid</span>
             </button>
             <button
               onClick={() => setActiveTab('code')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors font-mono ${
-                activeTab === 'code' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold' : 'text-slate-400 hover:text-slate-200'
+              className={`flex items-center gap-1.5 px-3 py-1 rounded transition-colors font-mono ${
+                activeTab === 'code' ? 'bg-white text-gray-900 border border-gray-900 font-bold shadow-xs' : 'text-gray-600 hover:text-black'
               }`}
             >
               <Code2 className="w-3.5 h-3.5" />
-              <span>Qiskit Code</span>
+              <span>Code</span>
             </button>
           </div>
 
@@ -198,14 +196,14 @@ export default function QuantumLab() {
                 value={saveTitle}
                 onChange={(e) => setSaveTitle(e.target.value)}
                 placeholder="Circuit name..."
-                className="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-3 py-1.5 rounded-lg focus:outline-none focus:border-cyan-500 w-36"
+                className="bg-white border border-gray-300 text-xs text-gray-900 px-2.5 py-1 rounded focus:outline-none focus:border-gray-900 w-36"
               />
               <button
                 onClick={handleSaveCircuit}
                 disabled={!saveTitle.trim()}
-                className="flex items-center gap-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 text-xs rounded-lg border border-slate-700 font-mono transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-white hover:bg-gray-100 disabled:opacity-40 text-gray-900 text-xs rounded border border-gray-900 font-mono transition-colors"
               >
-                {savedSuccess ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Save className="w-3.5 h-3.5" />}
+                {savedSuccess ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Save className="w-3.5 h-3.5" />}
                 <span>{savedSuccess ? 'Saved' : 'Save'}</span>
               </button>
             </div>

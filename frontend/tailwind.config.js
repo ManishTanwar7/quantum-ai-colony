@@ -8,29 +8,30 @@ export default {
     extend: {
       colors: {
         quantum: {
-          dark: "#050814",
-          surface: "#0b112c",
-          card: "#121b42",
-          border: "#1e2c69",
-          cyan: "#00f0ff",
-          purple: "#9d4edd",
-          emerald: "#10b981",
-          rose: "#ff007f",
-          gold: "#f59e0b"
+          dark: "#ffffff",
+          surface: "#ffffff",
+          card: "#f9fafb",
+          border: "#e5e7eb",
+          cyan: "#0284c7",
+          purple: "#6b7280",
+          emerald: "#15803d",
+          rose: "#dc2626",
+          gold: "#b45309"
+        },
+        office: {
+          bg: "#ffffff",
+          panel: "#f9fafb",
+          muted: "#f3f4f6",
+          border: "#e5e7eb",
+          darkborder: "#111827",
+          heading: "#1f2937",
+          text: "#111827",
+          subtext: "#4b5563"
         }
       },
       fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace', 'Courier New']
-      },
-      animation: {
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'glow': 'glow 2s ease-in-out infinite alternate',
-      },
-      keyframes: {
-        glow: {
-          '0%': { boxShadow: '0 0 5px rgba(0, 240, 255, 0.4)' },
-          '100%': { boxShadow: '0 0 20px rgba(0, 240, 255, 0.9)' }
-        }
       }
     },
   },
