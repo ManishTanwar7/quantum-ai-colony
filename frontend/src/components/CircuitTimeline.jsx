@@ -36,42 +36,42 @@ export default function CircuitTimeline({ timelineSteps = [] }) {
   const stepProbs = activeStepData.state_summary || {};
 
   return (
-    <div className="flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-2xl backdrop-blur-xl">
+    <div className="flex flex-col bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
       
       {/* Header & Playback Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-purple-400" />
-          <h4 className="text-xs font-bold font-mono uppercase text-slate-200">
+          <Clock className="w-4 h-4 text-purple-600" />
+          <h4 className="text-xs font-bold font-mono uppercase text-slate-800">
             Circuit Execution Timeline & Wavefront
           </h4>
         </div>
 
         {/* Play / Step Buttons */}
-        <div className="flex items-center gap-1.5 bg-slate-950 px-2 py-1 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-xl border border-slate-200">
           <button
             onClick={() => setCurrentStep(0)}
             title="Reset to T0"
-            className="p-1 hover:text-cyan-400 text-slate-400 transition-colors"
+            className="p-1 hover:text-slate-900 text-slate-500 transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className="p-1 text-cyan-400 hover:text-cyan-300 transition-colors"
+            className="p-1 text-purple-700 hover:text-purple-900 transition-colors"
             title={isPlaying ? "Pause" : "Play Timeline"}
           >
-            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-cyan-400" />}
+            {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-purple-700" />}
           </button>
           <button
             onClick={() => setCurrentStep((prev) => Math.min(timelineSteps.length - 1, prev + 1))}
             disabled={currentStep >= timelineSteps.length - 1}
             title="Next Step"
-            className="p-1 hover:text-cyan-400 disabled:opacity-30 text-slate-400 transition-colors"
+            className="p-1 hover:text-slate-900 disabled:opacity-30 text-slate-500 transition-colors"
           >
             <SkipForward className="w-3.5 h-3.5" />
           </button>
-          <span className="text-[11px] font-mono text-cyan-300 ml-1">
+          <span className="text-[11px] font-mono text-purple-700 font-semibold ml-1">
             Step {currentStep}/{timelineSteps.length - 1}
           </span>
         </div>
@@ -80,9 +80,9 @@ export default function CircuitTimeline({ timelineSteps = [] }) {
       {/* Stepped Timeline Progress Line */}
       <div className="relative py-4">
         {/* Track Line */}
-        <div className="h-1 bg-slate-800 rounded-full overflow-hidden relative">
+        <div className="h-1 bg-slate-200 rounded-full overflow-hidden relative">
           <motion.div
-            className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
+            className="h-full bg-purple-600"
             style={{ width: `${(currentStep / Math.max(1, timelineSteps.length - 1)) * 100}%` }}
             transition={{ duration: 0.3 }}
           />
@@ -103,10 +103,10 @@ export default function CircuitTimeline({ timelineSteps = [] }) {
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
                     isSelected
-                      ? 'bg-cyan-500 border-white ring-4 ring-cyan-500/30 scale-125'
+                      ? 'bg-purple-600 border-white ring-4 ring-purple-100 text-white scale-125'
                       : isPast
-                      ? 'bg-slate-900 border-cyan-400 text-cyan-400'
-                      : 'bg-slate-950 border-slate-700 text-slate-600'
+                      ? 'bg-purple-50 border-purple-500 text-purple-700'
+                      : 'bg-white border-slate-300 text-slate-400'
                   }`}
                 >
                   <span className="text-[8px] font-bold font-mono">
@@ -114,7 +114,7 @@ export default function CircuitTimeline({ timelineSteps = [] }) {
                   </span>
                 </div>
 
-                <span className={`text-[9px] font-mono mt-1 ${isSelected ? 'text-cyan-300 font-bold' : 'text-slate-500'}`}>
+                <span className={`text-[9px] font-mono mt-1 ${isSelected ? 'text-purple-700 font-bold' : 'text-slate-500'}`}>
                   {s.gate || `T${idx}`}
                 </span>
               </button>
@@ -124,19 +124,19 @@ export default function CircuitTimeline({ timelineSteps = [] }) {
       </div>
 
       {/* Active Step Quantum State Preview */}
-      <div className="mt-2 p-3 bg-slate-950/90 rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+      <div className="mt-2 p-3 bg-slate-50 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
         <div>
-          <span className="text-slate-400 text-[10px]">Applied Unitary:</span>
-          <div className="text-cyan-300 font-bold text-sm">
+          <span className="text-slate-500 text-[10px]">Applied Unitary:</span>
+          <div className="text-slate-900 font-bold text-sm">
             {activeStepData.gate === 'INIT' ? 'Initial |00...0⟩' : `${activeStepData.gate} on Qubit ${activeStepData.target}`}
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 text-[10px]">State Amplitudes:</span>
+          <span className="text-slate-500 text-[10px]">State Amplitudes:</span>
           <div className="flex items-center gap-1.5">
             {Object.entries(stepProbs).slice(0, 4).map(([st, p]) => (
-              <span key={st} className="px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-[11px] text-purple-300">
+              <span key={st} className="px-2 py-0.5 rounded bg-white border border-slate-200 text-[11px] text-slate-800 font-medium shadow-xs">
                 |{st}⟩: {Math.round(p * 100)}%
               </span>
             ))}

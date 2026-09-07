@@ -13,9 +13,8 @@ const MODULES = [
     specialist: 'Prof. Evelyn Vance',
     tag: 'MODULE 01 • AXIOMATIC PHYSICS',
     icon: BookOpen,
-    color: '#38bdf8',
-    border: 'border-cyan-500/40',
-    bg: 'from-cyan-950/40 to-slate-900/90',
+    color: '#7c3aed',
+    badgeBg: 'bg-purple-50 text-purple-700 border-purple-200',
     shortDesc: 'Mathematical foundations of Hilbert space, Dirac notation & unitaries.',
     deepDive: {
       title: 'Hilbert Space Formalism & Dirac Notation',
@@ -35,9 +34,8 @@ const MODULES = [
     specialist: 'Devin Matrix',
     tag: 'MODULE 02 • GATE SYNTHESIS',
     icon: Cpu,
-    color: '#34d399',
-    border: 'border-emerald-500/40',
-    bg: 'from-emerald-950/40 to-slate-900/90',
+    color: '#059669',
+    badgeBg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     shortDesc: 'Drag-and-drop quantum gate assembly & Qiskit code synthesis.',
     deepDive: {
       title: 'Quantum Logic Architecture & Synthesis',
@@ -57,9 +55,8 @@ const MODULES = [
     specialist: 'Agent BugHunter',
     tag: 'MODULE 03 • ERROR AUDIT',
     icon: Bug,
-    color: '#f43f5e',
-    border: 'border-rose-500/40',
-    bg: 'from-rose-950/40 to-slate-900/90',
+    color: '#e11d48',
+    badgeBg: 'bg-rose-50 text-rose-700 border-rose-200',
     shortDesc: 'Decoherence audit, unitarity leak detection & phase diagnostics.',
     deepDive: {
       title: 'Quantum Coherence & Unitarity Auditing',
@@ -79,9 +76,8 @@ const MODULES = [
     specialist: 'OptiPrime',
     tag: 'MODULE 04 • DEPTH REDUCTION',
     icon: Zap,
-    color: '#fbbf24',
-    border: 'border-amber-500/40',
-    bg: 'from-amber-950/40 to-slate-900/90',
+    color: '#d97706',
+    badgeBg: 'bg-amber-50 text-amber-700 border-amber-200',
     shortDesc: 'Gate cancellation passes, depth compression & T-count reduction.',
     deepDive: {
       title: 'Peephole Optimization & Circuit Compaction',
@@ -101,9 +97,8 @@ const MODULES = [
     specialist: 'Iris Quantum',
     tag: 'MODULE 05 • 3D PROJECTION',
     icon: Eye,
-    color: '#c084fc',
-    border: 'border-purple-500/40',
-    bg: 'from-purple-950/40 to-slate-900/90',
+    color: '#4f46e5',
+    badgeBg: 'bg-indigo-50 text-indigo-700 border-indigo-200',
     shortDesc: '3D Bloch sphere state mapping & measurement probability distribution.',
     deepDive: {
       title: 'Hilbert Space Geometric Mapping',
@@ -128,14 +123,14 @@ export default function CommandDeck() {
       {/* Deck Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 text-xs font-mono">
-            <Sliders className="w-3.5 h-3.5 text-cyan-300" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono font-medium">
+            <Sliders className="w-3.5 h-3.5 text-purple-600" />
             <span>CENTRAL COMMAND DECK • 5 MODULAR STATIONS</span>
           </div>
-          <h2 className="text-2xl lg:text-3xl font-extrabold text-white mt-1">
+          <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 mt-1">
             Quantum Operations Dashboard
           </h2>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Click any station to open interactive progressive-disclosure diagnostics
           </p>
         </div>
@@ -148,49 +143,51 @@ export default function CommandDeck() {
           const isSelected = selectedModule?.id === mod.id;
 
           return (
-            <motion.div
+            <div
               key={mod.id}
-              whileHover={{ scale: 1.03, y: -4 }}
-              transition={{ duration: 0.2 }}
               onClick={() => setSelectedModule(mod)}
-              className={`cursor-pointer p-5 rounded-2xl border bg-gradient-to-b ${mod.bg} transition-all duration-300 flex flex-col justify-between space-y-4 shadow-xl backdrop-blur-md relative overflow-hidden ${
+              className={`cursor-pointer p-5 rounded-2xl border transition-all duration-200 flex flex-col justify-between space-y-4 bg-white shadow-xs hover:shadow-sm ${
                 isSelected
-                  ? `${mod.border} ring-2 ring-cyan-400 shadow-[0_0_25px_rgba(56,189,248,0.3)]`
-                  : `${mod.border} hover:border-cyan-400/80`
+                  ? 'border-purple-600 ring-2 ring-purple-100'
+                  : 'border-slate-200 hover:border-slate-300'
               }`}
             >
               <div>
                 <div className="flex items-center justify-between">
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center bg-slate-950/80 border border-slate-800 shadow-inner"
-                    style={{ color: mod.color }}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center border"
+                    style={{ 
+                      backgroundColor: `${mod.color}15`, 
+                      borderColor: `${mod.color}30`,
+                      color: mod.color 
+                    }}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-mono text-slate-400">
+                  <span className="text-[10px] font-mono text-slate-400 font-medium">
                     {mod.tag.split('•')[0].trim()}
                   </span>
                 </div>
 
                 <div className="mt-4">
-                  <h3 className="font-bold text-base text-white">{mod.name}</h3>
+                  <h3 className="font-bold text-base text-slate-900">{mod.name}</h3>
                   <div
                     className="text-xs font-mono font-semibold mt-0.5"
                     style={{ color: mod.color }}
                   >
                     {mod.specialist}
                   </div>
-                  <p className="text-xs text-slate-300 mt-2 leading-relaxed">
+                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
                     {mod.shortDesc}
                   </p>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-cyan-300">
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-mono text-purple-700 font-medium">
                 <span>Inspect Module</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>
@@ -199,30 +196,32 @@ export default function CommandDeck() {
       <AnimatePresence>
         {selectedModule && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            className="p-6 lg:p-8 rounded-3xl bg-slate-900/95 border border-cyan-500/50 shadow-2xl relative overflow-hidden backdrop-blur-2xl"
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.2 }}
+            className="p-6 lg:p-8 rounded-3xl bg-white border border-slate-300 shadow-md relative overflow-hidden text-slate-800"
           >
-            {/* Ambient glow */}
-            <div
-              className="absolute -top-24 -right-24 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none"
-              style={{ backgroundColor: selectedModule.color }}
-            />
-
             <div className="flex items-start justify-between relative z-10">
               <div className="flex items-center gap-3">
                 <div
-                  className="p-2.5 rounded-xl bg-slate-950 border border-slate-800"
-                  style={{ color: selectedModule.color }}
+                  className="p-2.5 rounded-xl border"
+                  style={{ 
+                    backgroundColor: `${selectedModule.color}15`, 
+                    borderColor: `${selectedModule.color}30`,
+                    color: selectedModule.color 
+                  }}
                 >
                   <selectedModule.icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <div className="text-[10px] font-mono text-cyan-400 font-semibold tracking-wider uppercase">
+                  <div 
+                    className="text-[10px] font-mono font-bold tracking-wider uppercase"
+                    style={{ color: selectedModule.color }}
+                  >
                     {selectedModule.tag}
                   </div>
-                  <h3 className="text-xl font-bold text-white">
+                  <h3 className="text-xl font-bold text-slate-900">
                     {selectedModule.name} — {selectedModule.deepDive.title}
                   </h3>
                 </div>
@@ -230,36 +229,37 @@ export default function CommandDeck() {
 
               <button
                 onClick={() => setSelectedModule(null)}
-                className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+                className="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors"
+                title="Close"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 mt-4 leading-relaxed max-w-4xl relative z-10">
+            <p className="text-xs text-slate-600 mt-4 leading-relaxed max-w-4xl relative z-10">
               {selectedModule.deepDive.overview}
             </p>
 
             {/* Core Concepts */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-6 relative z-10">
               {selectedModule.deepDive.keyConcepts.map((c, i) => (
-                <div key={i} className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 text-xs space-y-1 font-mono">
-                  <div className="text-slate-400 text-[10px] uppercase font-bold">{c.label}</div>
-                  <div className="font-bold text-slate-100">{c.value}</div>
+                <div key={i} className="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs space-y-1 font-mono">
+                  <div className="text-slate-500 text-[10px] uppercase font-bold">{c.label}</div>
+                  <div className="font-bold text-slate-900">{c.value}</div>
                 </div>
               ))}
             </div>
 
             {/* Action Bar */}
-            <div className="mt-6 pt-4 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-4 relative z-10">
-              <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span>Station Specialist: <strong className="text-white">{selectedModule.specialist}</strong> Online</span>
+            <div className="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4 relative z-10">
+              <div className="flex items-center gap-2 text-xs font-mono text-slate-500">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span>Station Specialist: <strong className="text-slate-800 font-medium">{selectedModule.specialist}</strong> Online</span>
               </div>
 
               <Link
                 to={selectedModule.deepDive.actionLink}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs rounded-xl shadow-lg transition-all hover:scale-105"
+                className="flex items-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl shadow-xs transition-colors"
               >
                 <span>{selectedModule.deepDive.actionLabel}</span>
                 <ExternalLink className="w-3.5 h-3.5" />

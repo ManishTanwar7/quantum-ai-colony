@@ -28,6 +28,10 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
 
       ctx.clearRect(0, 0, width, height);
 
+      // Clean background fill
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+
       // Controlled, gentle rotation
       if (isRotating && speedMultiplier > 0 && !isDraggingRef.current) {
         rotYRef.current += 0.001 * speedMultiplier;
@@ -55,24 +59,24 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
         };
       };
 
-      // 1. Cosmic Sphere radial gradient (deep obsidian with soft violet rim)
-      const grad = ctx.createRadialGradient(centerX, centerY, radius * 0.15, centerX, centerY, radius);
-      grad.addColorStop(0, 'rgba(168, 85, 247, 0.08)');
-      grad.addColorStop(0.75, 'rgba(15, 23, 42, 0.88)');
-      grad.addColorStop(1, 'rgba(168, 85, 247, 0.25)');
+      // 1. Soft spherical gradient (clean porcelain)
+      const grad = ctx.createRadialGradient(centerX, centerY, radius * 0.1, centerX, centerY, radius);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.85, '#f8fafc');
+      grad.addColorStop(1, '#f1f5f9');
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
       ctx.fill();
 
-      // Outer boundary ring (soft violet)
-      ctx.strokeStyle = 'rgba(168, 85, 247, 0.4)';
-      ctx.lineWidth = 1.4;
+      // Outer boundary ring (soft slate)
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1.2;
       ctx.stroke();
 
       // 2. Equator Ring (z = 0)
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(147, 51, 234, 0.45)';
+      ctx.strokeStyle = '#94a3b8';
       ctx.lineWidth = 1.0;
       ctx.setLineDash([4, 4]);
       for (let angle = 0; angle <= Math.PI * 2; angle += 0.05) {
@@ -100,17 +104,17 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
         ctx.fillText(label, end.px + 6, end.py + 4);
       };
 
-      drawAxis(0, 0, 1, '|0⟩ (+Z)', '#c084fc');  // North: Soft Violet
-      drawAxis(1, 0, 0, '|+⟩ (+X)', '#34d399');  // X: Emerald
-      drawAxis(0, 1, 0, '|+i⟩ (+Y)', '#fbbf24'); // Y: Amber
+      drawAxis(0, 0, 1, '|0⟩ (+Z)', '#7c3aed');  // North: Soft Violet
+      drawAxis(1, 0, 0, '|+⟩ (+X)', '#059669');  // X: Emerald
+      drawAxis(0, 1, 0, '|+i⟩ (+Y)', '#d97706'); // Y: Amber
 
       // South pole label
       const south = project(0, 0, -1.15);
-      ctx.fillStyle = '#f43f5e';
+      ctx.fillStyle = '#e11d48';
       ctx.font = 'bold 11px monospace';
       ctx.fillText('|1⟩ (-Z)', south.px + 6, south.py + 4);
 
-      // 4. State Vector Arrow (Warm Amber / Gold Glow)
+      // 4. State Vector Arrow (Warm Amber / Gold)
       const vx = activeVector.x || 0;
       const vy = activeVector.y || 0;
       const vz = activeVector.z !== undefined ? activeVector.z : 1;
@@ -121,7 +125,7 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
       // Equator projection dashed line
       const equatorProj = project(vx, vy, 0);
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.strokeStyle = '#94a3b8';
       ctx.lineWidth = 1.0;
       ctx.setLineDash([2, 2]);
       ctx.moveTo(tip.px, tip.py);
@@ -130,19 +134,17 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Vector Arrow with glowing amber shadow
+      // Vector Arrow in warm amber
       ctx.save();
-      ctx.shadowColor = '#fbbf24';
-      ctx.shadowBlur = 10;
       ctx.beginPath();
-      ctx.strokeStyle = '#f59e0b';
-      ctx.lineWidth = 3.0;
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 2.8;
       ctx.moveTo(origin.px, origin.py);
       ctx.lineTo(tip.px, tip.py);
       ctx.stroke();
 
       // Vector tip sphere
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#b45309';
       ctx.beginPath();
       ctx.arc(tip.px, tip.py, 4.5, 0, Math.PI * 2);
       ctx.fill();
@@ -181,27 +183,27 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
   };
 
   return (
-    <div className="flex flex-col bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-2xl backdrop-blur-xl">
+    <div className="flex flex-col bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
       
       {/* Header & Qubit Selection */}
       <div className="flex items-center justify-between gap-3 mb-2.5">
         <div className="flex items-center gap-2">
-          <Compass className="w-4 h-4 text-purple-400" />
-          <h4 className="text-xs font-bold font-mono uppercase text-slate-200">
+          <Compass className="w-4 h-4 text-purple-600" />
+          <h4 className="text-xs font-bold font-mono uppercase text-slate-800">
             3D Bloch Sphere Visualizer
           </h4>
         </div>
 
         {/* Qubit Selector */}
         {blochVectors.length > 1 && (
-          <div className="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800 text-xs font-mono">
-            <span className="text-slate-400 text-[10px]">Qubit:</span>
+          <div className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-200 text-xs font-mono">
+            <span className="text-slate-500 text-[10px]">Qubit:</span>
             {blochVectors.map((_, i) => (
               <button
                 key={i}
                 onClick={() => onSelectQubit && onSelectQubit(i)}
                 className={`px-1.5 py-0.5 rounded text-[11px] transition-colors ${
-                  selectedQubit === i ? 'bg-purple-600 text-white font-bold' : 'text-slate-400 hover:text-white'
+                  selectedQubit === i ? 'bg-slate-900 text-white font-bold' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 q{i}
@@ -212,9 +214,9 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
       </div>
 
       {/* Speed & Rotation Control Bar */}
-      <div className="flex items-center justify-between bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-mono mb-2.5">
-        <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
-          <Gauge className="w-3.5 h-3.5 text-amber-400" />
+      <div className="flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-mono mb-2.5">
+        <div className="flex items-center gap-1.5 text-slate-600 text-[11px]">
+          <Gauge className="w-3.5 h-3.5 text-amber-600" />
           <span>Rotation:</span>
         </div>
 
@@ -222,11 +224,11 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
           <button
             onClick={() => setIsRotating(!isRotating)}
             className={`px-2 py-0.5 rounded text-[10px] flex items-center gap-1 transition-colors ${
-              !isRotating ? 'bg-rose-950 text-rose-300 border border-rose-800' : 'bg-slate-800 text-slate-300 hover:text-white'
+              !isRotating ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-100'
             }`}
             title="Pause / Resume Rotation"
           >
-            {isRotating ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 fill-rose-300" />}
+            {isRotating ? <Pause className="w-2.5 h-2.5" /> : <Play className="w-2.5 h-2.5 fill-rose-700" />}
             <span>{isRotating ? 'Pause' : 'Paused'}</span>
           </button>
 
@@ -240,8 +242,8 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
               onClick={() => { setSpeedMultiplier(s.val); setIsRotating(true); }}
               className={`px-1.5 py-0.5 rounded text-[10px] transition-colors ${
                 isRotating && speedMultiplier === s.val
-                  ? 'bg-purple-600 text-white font-bold'
-                  : 'bg-slate-800/80 text-slate-400 hover:text-slate-200'
+                  ? 'bg-slate-900 text-white font-bold'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:text-slate-900'
               }`}
             >
               {s.label}
@@ -250,7 +252,7 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
 
           <button
             onClick={resetView}
-            className="p-1 text-slate-400 hover:text-white rounded transition-colors"
+            className="p-1 text-slate-500 hover:text-slate-800 rounded transition-colors"
             title="Reset Orientation"
           >
             <RotateCcw className="w-3 h-3" />
@@ -270,30 +272,30 @@ export default function BlochSphere3D({ blochVectors = [], selectedQubit = 0, on
           ref={canvasRef}
           width={320}
           height={260}
-          className="rounded-xl w-full max-w-[320px] aspect-[4/3]"
+          className="rounded-xl w-full max-w-[320px] aspect-[4/3] border border-slate-100"
         />
-        <div className="absolute bottom-2 left-2 text-[10px] text-slate-500 font-mono pointer-events-none">
+        <div className="absolute bottom-2 left-2 text-[10px] text-slate-400 font-mono pointer-events-none">
           Click & drag to manually rotate
         </div>
       </div>
 
       {/* Numerical State Vector Coordinates */}
-      <div className="mt-3 pt-3 border-t border-slate-800/80 grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
-        <div className="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
-          <div className="text-slate-400 text-[10px]">X Component</div>
-          <div className="font-bold text-emerald-400">{activeVector.x?.toFixed(3) || '0.000'}</div>
+      <div className="mt-3 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-center text-[11px] font-mono">
+        <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+          <div className="text-slate-500 text-[10px]">X Component</div>
+          <div className="font-bold text-emerald-700">{activeVector.x?.toFixed(3) || '0.000'}</div>
         </div>
-        <div className="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
-          <div className="text-slate-400 text-[10px]">Y Component</div>
-          <div className="font-bold text-amber-400">{activeVector.y?.toFixed(3) || '0.000'}</div>
+        <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+          <div className="text-slate-500 text-[10px]">Y Component</div>
+          <div className="font-bold text-amber-700">{activeVector.y?.toFixed(3) || '0.000'}</div>
         </div>
-        <div className="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
-          <div className="text-slate-400 text-[10px]">Z Component</div>
-          <div className="font-bold text-purple-300">{activeVector.z?.toFixed(3) || '1.000'}</div>
+        <div className="bg-slate-50 p-2 rounded-lg border border-slate-200">
+          <div className="text-slate-500 text-[10px]">Z Component</div>
+          <div className="font-bold text-purple-700">{activeVector.z?.toFixed(3) || '1.000'}</div>
         </div>
       </div>
 
-      <div className="mt-2 text-[10px] text-slate-400 text-center font-mono">
+      <div className="mt-2 text-[10px] text-slate-500 text-center font-mono">
         θ = {((activeVector.theta || 0) * (180 / Math.PI)).toFixed(1)}° | φ = {((activeVector.phi || 0) * (180 / Math.PI)).toFixed(1)}°
       </div>
 

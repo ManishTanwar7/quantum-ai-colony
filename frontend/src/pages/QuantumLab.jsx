@@ -155,40 +155,40 @@ export default function QuantumLab() {
       {/* Studio Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-extrabold text-white flex items-center gap-3">
+          <h1 className="text-2xl lg:text-3xl font-extrabold text-slate-900 flex items-center gap-3">
             <span>Quantum Circuit Studio</span>
-            <span className="text-xs px-2.5 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 font-mono font-normal shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+            <span className="text-xs px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 text-purple-700 font-mono font-medium">
               AER SIMULATOR • EXACT STATEVECTOR
             </span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Design unitary quantum circuits with visual drag-and-drop or Python Qiskit code.
           </p>
         </div>
 
         {/* View mode switcher & Save dialog */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs">
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs">
             <button
               onClick={() => setActiveTab('grid')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all font-mono ${
                 activeTab === 'grid' 
-                  ? 'bg-purple-600 text-white font-bold shadow-[0_0_10px_rgba(168,85,247,0.3)]' 
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs' 
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Layers className="w-3.5 h-3.5" />
+              <Layers className="w-3.5 h-3.5 text-purple-600" />
               <span>Grid Builder</span>
             </button>
             <button
               onClick={() => setActiveTab('code')}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all font-mono ${
                 activeTab === 'code' 
-                  ? 'bg-purple-600 text-white font-bold shadow-[0_0_10px_rgba(168,85,247,0.3)]' 
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-slate-900 font-semibold shadow-xs' 
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Code2 className="w-3.5 h-3.5" />
+              <Code2 className="w-3.5 h-3.5 text-purple-600" />
               <span>Qiskit Code</span>
             </button>
           </div>
@@ -200,14 +200,14 @@ export default function QuantumLab() {
                 value={saveTitle}
                 onChange={(e) => setSaveTitle(e.target.value)}
                 placeholder="Circuit name..."
-                className="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-3 py-1.5 rounded-lg focus:outline-none focus:border-purple-500 w-36"
+                className="bg-white border border-slate-300 text-xs text-slate-900 px-3 py-1.5 rounded-lg focus:outline-none focus:border-slate-800 w-36 shadow-xs"
               />
               <button
                 onClick={handleSaveCircuit}
                 disabled={!saveTitle.trim()}
-                className="flex items-center gap-1 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 text-xs rounded-lg border border-slate-700 font-mono transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 disabled:opacity-40 text-white text-xs rounded-lg font-mono transition-colors shadow-xs"
               >
-                {savedSuccess ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Save className="w-3.5 h-3.5" />}
+                {savedSuccess ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-300" /> : <Save className="w-3.5 h-3.5" />}
                 <span>{savedSuccess ? 'Saved' : 'Save'}</span>
               </button>
             </div>
